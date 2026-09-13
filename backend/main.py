@@ -1,15 +1,15 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 class AssessmentInput(BaseModel):
-    basic_pay: float
-    allowances: float
+    basic_pay: float = Field(gt=0)
+    allowances: float = Field(ge=0)
     contributes_gpf: bool
-    medical_aid: float = 0
-    union_dues: float = 0
-    existing_debt_obligations: float = 0
-    living_expenses: float = 0
+    medical_aid: float = Field(ge=0, default=0)
+    union_dues: float = Field(ge=0, default=0)
+    existing_debt_obligations: float = Field(ge=0, default=0)
+    living_expenses: float = Field(ge=0, default=0)
 
 
 def get_gross_salary(basic_pay, allowances):

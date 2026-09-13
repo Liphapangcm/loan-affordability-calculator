@@ -7,6 +7,14 @@ function App() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const apiUrl = import.meta.env.VITE_API_URL
+  const fieldLabels= {
+    basic_pay: "Basic pay",
+    allowances: "Allowances",
+    medical_aid: "Medical aid",
+    union_dues: "Union dues",
+    existing_debt_obligations: "Existing debt obligations",
+    living_expenses: "Living expenses"
+  }
 
   async function handleFormSubmit(formData) {
     setLoading(true)
@@ -19,6 +27,21 @@ function App() {
       })
 
       if (!response.ok) {
+        const errorData = await response.json()
+        if (response.status === 422) {
+          const firstError = errorData.detail[0]
+          const fieldKey = firstError.loc[firstError.loc.length - 1]
+          const readableName = fieldLabels[fieldKey] || fieldKey
+
+          if (firstError.type === 'greater_than_equal'){
+            throw new Error(`${readableName} can't be negative`)
+          }
+
+          if (firstError.type === 'greater_than'){
+            throw new Error(`${readableName} must be greater than than zero`)
+          }
+          throw new Error(`${readableName}: ${firstError.msg}`)
+        }
         throw new Error(`Server returned ${response.status}`)
       }
 
@@ -26,7 +49,7 @@ function App() {
       setResult(data)
     } catch (err) {
       console.error('Fetch error:', err)
-      setError('Unable to connect to the backend server. Make sure Python/Uvicorn is running on port 8000.')
+      setError(err.message)
     } finally {
       setLoading(false)
     }
