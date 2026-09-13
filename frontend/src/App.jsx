@@ -6,16 +6,17 @@ function App() {
   const [result, setResult] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const apiUrl = import.meta.env.VITE_API_URL
 
   async function handleFormSubmit(formData) {
     setLoading(true)
     setError(null)
     try {
-      const response = await fetch('http://localhost:8000/assessment', {
+      const response = await fetch(`${apiUrl}/assessment`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
-      })
+      }
 
       if (!response.ok) {
         throw new Error(`Server returned ${response.status}`)
