@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Form from './Form'
 import Results from './Results'
+import BreakdownChart from './BreakdownChart'
 
 function App() {
   const [result, setResult] = useState(null)
@@ -70,6 +71,15 @@ function App() {
           <Form onSubmit={handleFormSubmit} loading={loading} />
           <Results result={result} loading={loading} />
         </div>
+        <div className="grid md:grid-cols-2 gap-6">
+          <Form onSubmit={handleFormSubmit} loading={loading} />
+          <Results result={result} loading={loading} />
+        </div>
+        {result && (
+          <div className="mt-6">
+            <BreakdownChart result={result}/>
+          </div>
+        )}
       </div>
     </div>
   )
