@@ -8,6 +8,7 @@ function App() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const apiUrl = import.meta.env.VITE_API_URL
+  
   const fieldLabels= {
     basic_pay: "Basic pay",
     allowances: "Allowances",
@@ -39,7 +40,7 @@ function App() {
           }
 
           if (firstError.type === 'greater_than'){
-            throw new Error(`${readableName} must be greater than than zero`)
+            throw new Error(`${readableName} must be greater than zero`)
           }
           throw new Error(`${readableName}: ${firstError.msg}`)
         }
@@ -71,10 +72,7 @@ function App() {
           <Form onSubmit={handleFormSubmit} loading={loading} />
           <Results result={result} loading={loading} />
         </div>
-        <div className="grid md:grid-cols-2 gap-6">
-          <Form onSubmit={handleFormSubmit} loading={loading} />
-          <Results result={result} loading={loading} />
-        </div>
+        
         {result && (
           <div className="mt-6">
             <BreakdownChart result={result}/>
